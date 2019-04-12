@@ -1,6 +1,8 @@
 // <reference path="./node_modules/tns-platform-declarations/ios.d.ts" />
 // <reference path="./node_modules/tns-platform-declarations/android.d.ts" />
 
+// Documentation from : https://blog.atulr.com/react-custom-renderer-2/
+
 import { HostConfig, OpaqueHandle } from 'react-reconciler';
 
 import { View } from 'tns-core-modules/ui/core/view/view';
@@ -10,15 +12,15 @@ import * as NSElements from './nativescript-registery';
 
 type Type = keyof typeof NSElements; ;
 type Props = Record<string, any>;
-type Container = LayoutBase; // The root node of the app. Typically Frame, but View is more flexible.
-type Instance = View; // We may extend this to Observable in future, to allow the tree to contain non-visual components.
+type Container = LayoutBase; 
+type Instance = View; 
 type TextInstance = NSElements.TextView;
 type HydratableInstance = any;
 type PublicInstance = any;
 type HostContext = any;
 type UpdatePayload = any;
 type ChildSet = any;
-type TimeoutHandle = number; // Actually strictly should be Node-style timeout
+type TimeoutHandle = number; 
 type NoTimeout = any;
 
 export type ConfiguredHostConfig = HostConfig<Type, Props, Container, Instance, TextInstance, HydratableInstance, PublicInstance, HostContext, UpdatePayload, ChildSet, TimeoutHandle, NoTimeout>;
@@ -38,9 +40,7 @@ export const hostConfig: ConfiguredHostConfig = {
     // This function is called when we have made a in-memory render tree of all the views (Remember we are yet to attach it the the actual root dom node).
     // Here we can do any preparation that needs to be done on the rootContainer before attaching the in memory render tree.
     // For example: In the case of react-dom, it keeps track of all the currently focused elements, disabled events temporarily, etc.
-    prepareForCommit(rootContainerInstance) {
-        // TODO
-    },
+    prepareForCommit(rootContainerInstance) {},
     
     // @returns A boolean value which decides if commitMount() for this element needs to be called.
     finalizeInitialChildren(parentInstance, type, props, rootContainerInstance, hostContext ) { return false; },
@@ -52,9 +52,7 @@ export const hostConfig: ConfiguredHostConfig = {
 
     // This function gets executed after the inmemory tree has been attached to the root dom element. Here we can do any post attach operations that needs to be done.
     // For example: react-dom re-enabled events which were temporarily disabled in prepareForCommit and refocuses elements, etc.
-    resetAfterCommit(rootContainerInstance) {
-        // TODO
-    },
+    resetAfterCommit(rootContainerInstance) {},
 
     // This function is used to deprioritize rendering of some subtrees. Mostly used in cases where the subtree is hidden or offscreen.
     shouldDeprioritizeSubtree(type, props) {
@@ -72,7 +70,7 @@ export const hostConfig: ConfiguredHostConfig = {
     noTimeout: null,
     now: Date.now,
     isPrimaryRenderer: true,
-    supportsMutation: true, // TODO
+    supportsMutation: true, 
     supportsPersistence: false,
     supportsHydration: false,
 
@@ -80,21 +78,30 @@ export const hostConfig: ConfiguredHostConfig = {
         const NSElement = NSElements[type];
         if (!NSElement) { return null; }
         
-        const view = new NSElement();
-        const updatePayload = hostConfig.prepareUpdate(view, type, null, props, rootContainerInstance, hostContext);
-        hostConfig.commitUpdate(view, updatePayload, type, null, props)
+        const instance = new NSElement();
+        const updatePayload = hostConfig.prepareUpdate(instance, type, null, props, rootContainerInstance, hostContext);
+        hostConfig.commitUpdate(instance, updatePayload, type, null, props)
 
-        return view;
+        return instance;
     },
 
     // This function should return a payload object. Can be anything
     // Payload is a Javascript object that can contain information on what needs to be changed on this host element.
     prepareUpdate( instance, type, oldProps, newProps, rootContainerInstance, hostContext ) {
-        // TODO
         return true;
     },
 
     commitUpdate(instance: Instance, updatePayload, type, oldProps, newProps, internalInstanceHandle: OpaqueHandle ): void {
+        // Cleanup
+        Object.keys(oldProps).forEach((oldPropName: string)=>{
+            const oldProp = oldProps[oldPropName];
+            if(typeof oldProp === 'function'){  
+                const eventName = getNSEventNameFromReactPropName(oldPropName)
+                instance.removeEventListener(eventName) // remove old event listener
+            }
+        })
+            
+        // Update
         Object.keys(newProps).forEach((propName: string) => { 
             if( propName === 'children'){ return; }
             
@@ -109,16 +116,11 @@ export const hostConfig: ConfiguredHostConfig = {
 
             // if prop is an event listerner
             if(typeof newProp === 'function'){                
-                const eventName = propName.startsWith('on')
-                    && propName.slice(2).toLowerCase(); // transform onTap => tap
-                
-                instance.off(eventName) // remove old event listener
-                instance.on(eventName, newProp, instance); // add new event listerner
+                const eventName = getNSEventNameFromReactPropName(propName) // transform onTap => tap
+                instance.addEventListener(eventName, newProp, instance); // add new event listerner
             } else {
                 instance.set(propName, newProp);
             }
-
-            instance.notifyPropertyChange(propName, newProp, oldProp);  // e.g.: https://github.com/NativeScript/NativeScript/blob/master/tns-core-modules/data/observable/observable.ts#L53
         })
     },
 
@@ -160,4 +162,10 @@ export const hostConfig: ConfiguredHostConfig = {
           parentInstance._removeView(child);
         }
     },
+}
+
+// TODO: use memoization;
+// transform onTap => tap
+function getNSEventNameFromReactPropName(propName: string){
+    return propName.startsWith('on') && propName.slice(2).toLowerCase();
 }

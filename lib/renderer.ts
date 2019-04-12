@@ -1,26 +1,27 @@
-import * as ReactReconciler from 'react-reconciler';
+import * as React from 'react';
+import * as reactReconciler from 'react-reconciler';
 import * as application from "tns-core-modules/application";
 
 import { hostConfig } from './hostConfig';
 import { ContentView } from './nativescript-registery';
 
-const reactReconcilerInst = ReactReconciler(hostConfig);
+const reconciler = reactReconciler(hostConfig);
 
-function renderReactNativeScriptApp(reactElement: ReactReconciler.ReactNodeList, rootContainer, callback ){
-    const container = reactReconcilerInst.createContainer(rootContainer, false, false);
-    reactReconcilerInst.updateContainer(reactElement, container, null, callback);
+function renderReactNativeScriptApp(rootReactElement: React.ReactElement, rootNativeContainer, callback ){
+    const reconcilerContainer = reconciler.createContainer(rootNativeContainer, false, false);
+    reconciler.updateContainer(rootReactElement, reconcilerContainer, null, callback);
 }
 
 const AppRegistry = {
     runApplication: (
-        reactElement: ReactReconciler.ReactNodeList, // <App />
-        callback?: () => any // Called after the component is rendered or updated
+        rootReactElement: React.ReactElement, 
+        callback?: () => any // Will be called after the component is rendered  updated
     ) => {
         application.run({
             create: () => {
-                const rootContainer = new ContentView();
-                renderReactNativeScriptApp(reactElement, rootContainer, callback)
-                return rootContainer;
+                const rootNativeContainer = new ContentView();
+                renderReactNativeScriptApp(rootReactElement, rootNativeContainer, callback)
+                return rootNativeContainer;
             } 
         });
     }

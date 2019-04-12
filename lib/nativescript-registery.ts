@@ -26,7 +26,6 @@ export { Slider } from "tns-core-modules/ui/slider/slider";
 export { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
 export { Switch } from "tns-core-modules/ui/switch/switch";
 export { TabView } from "tns-core-modules/ui/tab-view/tab-view";
-export { TextBase } from "tns-core-modules/ui/text-base/text-base";
 export { TextField } from "tns-core-modules/ui/text-field/text-field";
 export { TextView } from "tns-core-modules/ui/text-view/text-view";
 export { TimePicker } from "tns-core-modules/ui/time-picker/time-picker";
