@@ -32,6 +32,6 @@ NB: Feature requests are very welcome. You just have to create an issue my frien
 - [ ] Implement the RN StyleSheet, Animated API ( see react-native-web implementation)
 - [ ] Implement the ReactNative components (View, Text, etc) to help people transition to NativeScript
 - [ ] Implement DOM interface so that we would get instant compatibility with React-Router, React-Pose, etc ...
-- [ ] Use NativeScript native timers instead of SetTimeout / Setinterval
+      ( use https://github.com/NathanaelA/nativescript-dom package )
 - [ ] `feature requests are welcome`
  
