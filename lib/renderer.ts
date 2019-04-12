@@ -6,12 +6,10 @@ import { ContentView } from './nativescript-registery';
 
 const reactReconcilerInst = ReactReconciler(hostConfig);
 
-const renderer = {
-    render(reactElement: ReactReconciler.ReactNodeList, rootContainer, callback ){
-        const container = reactReconcilerInst.createContainer(rootContainer, false, false);
-        reactReconcilerInst.updateContainer(reactElement, container, null, callback);
-    },
-};
+function renderReactNativeScriptApp(reactElement: ReactReconciler.ReactNodeList, rootContainer, callback ){
+    const container = reactReconcilerInst.createContainer(rootContainer, false, false);
+    reactReconcilerInst.updateContainer(reactElement, container, null, callback);
+}
 
 const AppRegistry = {
     runApplication: (
@@ -21,7 +19,7 @@ const AppRegistry = {
         application.run({
             create: () => {
                 const rootContainer = new ContentView();
-                renderer.render(reactElement, rootContainer, callback)
+                renderReactNativeScriptApp(reactElement, rootContainer, callback)
                 return rootContainer;
             } 
         });

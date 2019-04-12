@@ -1,14 +1,12 @@
 import * as React from 'react';
 import * as NSElements from './nativescript-registery'
 
-// TODO: add props.style API
-
 type NSIntrinsicElements = keyof typeof NSElements;
 type ReactPartialProps<P> = Partial<React.Props<any> & P & {}>;
 
-function createNSReactElementFactory<T>(Type: NSIntrinsicElements){
-  return React.forwardRef((props: Partial<React.Props<any> & T>, ref: any) => {
-    return React.createElement(Type, { ...props, ref });
+function createNSReactElementFactory<T>(type: NSIntrinsicElements){
+  return React.forwardRef((props: Partial<React.Props<T> & T>, ref: any) => {
+    return React.createElement(type, { ...props, ref });
   })
 }
 
@@ -50,15 +48,15 @@ export const WrapLayout = createNSReactElementFactory<NSElements.WrapLayout>('Wr
 type GetNSType<T> = (props: ReactPartialProps<T>) => NSIntrinsicElements;
 type GetNSProps<T,P> = (props: ReactPartialProps<T>) => ReactPartialProps<P>;
 
-// T is the NSComponent you want to alias with a different API. the API of the NSElement;
-// P is the API props you want to expose. the API you want to expose;
+// T is the NSComponent;
+// P is the props API you want to expose;
 function createNSAliasReactElementFactory<P, T>(config: { getNSType: GetNSType<P>, getNSProps: GetNSProps<P,T>}){
-  return (props: ReactPartialProps<P>) => {
+  return React.forwardRef((props: Partial<React.Props<P> & P>, ref: any) => {
     const nsType = config.getNSType(props);
     const nsProps = config.getNSProps(props);
 
-    return React.createElement(nsType, nsProps, props.children)
-  }
+    return React.createElement(nsType, { ...nsProps, ref })
+  })
 };
 
 export const View = createNSAliasReactElementFactory({
