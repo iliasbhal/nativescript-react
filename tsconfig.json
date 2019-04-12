@@ -13,14 +13,6 @@
             "dom"
         ],
         "baseUrl": ".",
-        "paths": {
-            "*": [
-                "./node_modules/*"
-            ],
-            "~/*": [
-                "app/*"
-            ]
-        }
     },
     "exclude": [
         "node_modules",
