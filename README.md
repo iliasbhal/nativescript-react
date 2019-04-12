@@ -1,3 +1,5 @@
+![NativeScript-React](https://raw.githubusercontent.com/iliasbhal/nativescript-react/master/head-img.png)
+
 # :package: :sparkles: NativeScript-React
 
 Build native application using React and Nativescript.
@@ -23,12 +25,14 @@ NB: Feature requests are very welcome. You just have to create an issue my frien
 
 - [x] Render NativeScript components througt React.
 - [x] Support Mutation, Adding/Removing/Insert Children
-- [ ] Create a CLI like create-react-app
+- [ ] Add webpack config and/or create a create-react-app flavor.
 - [ ] Start adding tests
+- [ ] Implement props.style
 - [ ] Implement CSS imports
-- [ ] Port the RN StyleSheet API / or add ability to use Styled-Components
-- [ ] Implement the ReactNative component API to help people transition to NativeScript
-- [ ] Implement DOM interface so that we would get instant compaitibiity with React-Router, React-Pose, etc ...
+- [ ] Make Styled-Components, React-Pose work out of the box
+- [ ] Implement the RN StyleSheet, Animated API ( see react-native-web implementation)
+- [ ] Implement the ReactNative components (View, Text, etc) to help people transition to NativeScript
+- [ ] Implement DOM interface so that we would get instant compatibility with React-Router, React-Pose, etc ...
 - [ ] Use NativeScript native timers instead of SetTimeout / Setinterval
 - [ ] `feature requests are welcome`
  
