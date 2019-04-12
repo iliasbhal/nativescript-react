@@ -1,0 +1,23 @@
+{
+  "name": "nativescript-react",
+  "version": "0.0.2",
+  "description": "Built truly native apps using React and NativeScript",
+  "main": "index.ts",
+  "directories": {
+    "example": "example",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iliasbhal/nativescript-react.git"
+  },
+  "author": "iliasbhal <ilias.bhal@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iliasbhal/nativescript-react/issues"
+  },
+  "homepage": "https://github.com/iliasbhal/nativescript-react#readme"
+}
