@@ -6,26 +6,15 @@
 import { HostConfig, OpaqueHandle } from 'react-reconciler';
 
 import { View } from 'tns-core-modules/ui/core/view/view';
-import { LayoutBase } from 'tns-core-modules/ui/layouts/layout-base';
+import { LayoutBase } from 'tns-core-modules/ui/layouts/layout-base.d';
 
 import * as NSElements from './nativescript-registery';
+import getUpdateInstructions from './utils/getUpdateInstructions';
+import createPropUpdater, { PROP_LIFECYCLE } from './utils/createPropUpdater';
 
-type Type = keyof typeof NSElements; ;
-type Props = Record<string, any>;
-type Container = LayoutBase; 
-type Instance = View; 
-type TextInstance = NSElements.TextView;
-type HydratableInstance = any;
-type PublicInstance = any;
-type HostContext = any;
-type UpdatePayload = any;
-type ChildSet = any;
-type TimeoutHandle = number; 
-type NoTimeout = any;
+import { CustomHostConfig } from './hostConfig.d';
 
-export type ConfiguredHostConfig = HostConfig<Type, Props, Container, Instance, TextInstance, HydratableInstance, PublicInstance, HostContext, UpdatePayload, ChildSet, TimeoutHandle, NoTimeout>;
-
-export const hostConfig: ConfiguredHostConfig = {
+const hostConfig: CustomHostConfig = {
     getPublicInstance(instance) { return instance; },
     getRootHostContext(rootContainerInstance) { return rootContainerInstance; }, 
     getChildHostContext(parentHostContext, type, rootContainerInstance) { return parentHostContext; },
@@ -33,9 +22,9 @@ export const hostConfig: ConfiguredHostConfig = {
     // in Nativescript there is no "text" you should use Label component
     // so we deactivated the react text capability
     shouldSetTextContent: (type, props) =>  false, // typeof props.children === 'string' || typeof props.children === 'number';,
-    createTextInstance( text, rootContainerInstance, hostContext, internalInstanceHandle: OpaqueHandle) {},
-    commitTextUpdate(textInstance: TextInstance, oldText: string, newText: string): void {},
-    resetTextContent(instance: Instance): void {},
+    createTextInstance( text, rootContainerInstance, hostContext, internalInstanceHandle) {},
+    commitTextUpdate(textInstance, oldText, newText) {},
+    resetTextContent(instance) {},
 
     // This function is called when we have made a in-memory render tree of all the views (Remember we are yet to attach it the the actual root dom node).
     // Here we can do any preparation that needs to be done on the rootContainer before attaching the in memory render tree.
@@ -47,7 +36,7 @@ export const hostConfig: ConfiguredHostConfig = {
 
     // This function is called for every element that has set the return value of finalizeInitialChildren() to true. This method is called after all the steps are done (ie after resetAfterCommit), meaning the entire tree has been attached to the dom.
     // This method is mainly used in react-dom for implementing autofocus. This method exists in react-dom only and not in react-native.
-    commitMount( instance, type, newProps, internalInstanceHandle: OpaqueHandle): void {},
+    commitMount( instance, type, newProps, internalInstanceHandle) {},
 
 
     // This function gets executed after the inmemory tree has been attached to the root dom element. Here we can do any post attach operations that needs to be done.
@@ -74,13 +63,13 @@ export const hostConfig: ConfiguredHostConfig = {
     supportsPersistence: false,
     supportsHydration: false,
 
-    createInstance(type, props, rootContainerInstance, hostContext, internalInstanceHandle: OpaqueHandle ) {
+    createInstance(type, props, rootContainerInstance, hostContext, internalInstanceHandle) {
         const NSElement = NSElements[type];
         if (!NSElement) { return null; }
         
         const instance = new NSElement();
         const updatePayload = hostConfig.prepareUpdate(instance, type, null, props, rootContainerInstance, hostContext);
-        hostConfig.commitUpdate(instance, updatePayload, type, null, props)
+        hostConfig.commitUpdate(instance, updatePayload, type, null, props, internalInstanceHandle)
 
         return instance;
     },
@@ -91,46 +80,26 @@ export const hostConfig: ConfiguredHostConfig = {
         return true;
     },
 
-    commitUpdate(instance: Instance, updatePayload, type, oldProps, newProps, internalInstanceHandle: OpaqueHandle ): void {
-        // Cleanup
-        Object.keys(oldProps).forEach((oldPropName: string)=>{
-            const oldProp = oldProps[oldPropName];
-            if(typeof oldProp === 'function'){  
-                const eventName = getNSEventNameFromReactPropName(oldPropName)
-                instance.removeEventListener(eventName) // remove old event listener
-            }
-        })
-            
-        // Update
-        Object.keys(newProps).forEach((propName: string) => { 
-            if( propName === 'children'){ return; }
-            
-            // will compare old props and new props and apply update only if needed
-            const oldProp = oldProps && oldProps[propName];
-            const newProp = newProps[propName];
+    commitUpdate(instance, updatePayload, type, oldProps, newProps, internalInstanceHandle): void {
+        const propUpdateInstructions = getUpdateInstructions(oldProps, newProps);
 
-            const propDidChange = oldProp !== newProp;
-            if(!propDidChange){
-                return;
-            }
+        const onCreateProps = createPropUpdater(PROP_LIFECYCLE.ON_CREATE, instance, updatePayload, type, oldProps, newProps, internalInstanceHandle);
+        const onUpdateProps = createPropUpdater(PROP_LIFECYCLE.ON_UPDATE, instance, updatePayload, type, oldProps, newProps, internalInstanceHandle);
+        const onDeleteProps = createPropUpdater(PROP_LIFECYCLE.ON_REMOVE, instance, updatePayload, type, oldProps, newProps, internalInstanceHandle);
 
-            // if prop is an event listerner
-            if(typeof newProp === 'function'){                
-                const eventName = getNSEventNameFromReactPropName(propName) // transform onTap => tap
-                instance.addEventListener(eventName, newProp, instance); // add new event listerner
-            } else {
-                instance.set(propName, newProp);
-            }
-        })
+        propUpdateInstructions.propsToCreate.forEach(onCreateProps);
+        propUpdateInstructions.propsToUpdate.forEach(onUpdateProps);
+        propUpdateInstructions.propsToRemove.forEach(onDeleteProps);
     },
 
+    insertBefore(parentInstance, child, beforeChild): void { hostConfig.appendChildToParent(parentInstance, child, { beforeChild }) },
+    insertInContainerBefore(container, child, beforeChild): void {  hostConfig.appendChildToParent(container, child, { beforeChild }) },
+    appendChildToContainer(container, child): void { hostConfig.appendChildToParent(container, child); },
+    appendInitialChild(parentInstance, child) { hostConfig.appendChildToParent(parentInstance, child); },
+    appendChild(parentInstance, child): void { hostConfig.appendChildToParent(parentInstance, child); },
 
-    /* Mutation (optional) */
-    insertBefore(parentInstance, child, beforeChild): void { hostConfig.appendChild(parentInstance, child, { beforeChild }) },
-    insertInContainerBefore(container, child, beforeChild): void {  hostConfig.appendChild(container, child, { beforeChild }) },
-    appendChildToContainer(container, child): void { hostConfig.appendChild(container, child); },
-    appendInitialChild(parentInstance, child) { hostConfig.appendChild(parentInstance, child) },
-    appendChild(parentInstance: Instance, child: Instance, options?: { beforeChild: Instance }): void {
+    // Custom function 
+    appendChildToParent(parentInstance, child, options?: { beforeChild }){
         if(parentInstance instanceof NSElements.ContentView){
             // These elements were originally designed to hold one element only
             // TODO: for elements that can only take one child, add a FlexView or something in between so that the "children" api will always be consistent
@@ -142,7 +111,6 @@ export const hostConfig: ConfiguredHostConfig = {
             if( options && options.beforeChild ){
                 const childIndex = parentInstance.getChildIndex(options.beforeChild);
                 parentInstance.insertChild(child, childIndex)
-                return 
             } else {
                 parentInstance.addChild(child);
             }
@@ -153,7 +121,7 @@ export const hostConfig: ConfiguredHostConfig = {
     },
 
     removeChildFromContainer(container, child): void { hostConfig.removeChild(container, child); }, 
-    removeChild(parentInstance: Instance, child: Instance): void {
+    removeChild(parentInstance, child): void {
         if(parentInstance instanceof NSElements.ContentView){ 
              parentInstance.content = null;
         } else if ( parentInstance instanceof LayoutBase ) {
@@ -164,8 +132,5 @@ export const hostConfig: ConfiguredHostConfig = {
     },
 }
 
-// TODO: use memoization;
-// transform onTap => tap
-function getNSEventNameFromReactPropName(propName: string){
-    return propName.startsWith('on') && propName.slice(2).toLowerCase();
-}
+export default hostConfig;
+
