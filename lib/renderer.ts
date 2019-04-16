@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as reactReconciler from 'react-reconciler';
 import * as application from "tns-core-modules/application";
 
-import hostConfig from './hostConfig';
+import { hostConfig } from './hostConfig';
 import { ContentView } from './nativescript-registery';
 
 const reconciler = reactReconciler(hostConfig);

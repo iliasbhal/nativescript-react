@@ -14,7 +14,7 @@ import createPropUpdater, { PROP_LIFECYCLE } from './utils/createPropUpdater';
 
 import { CustomHostConfig } from './hostConfig.d';
 
-const hostConfig: CustomHostConfig = {
+export const hostConfig: CustomHostConfig = {
     getPublicInstance(instance) { return instance; },
     getRootHostContext(rootContainerInstance) { return rootContainerInstance; }, 
     getChildHostContext(parentHostContext, type, rootContainerInstance) { return parentHostContext; },
@@ -131,6 +131,3 @@ const hostConfig: CustomHostConfig = {
         }
     },
 }
-
-export default hostConfig;
-

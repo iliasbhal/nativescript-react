@@ -23,15 +23,15 @@ NB: Feature requests are very welcome. You just have to create an issue my frien
 
 - [x] Render NativeScript components througt React.
 - [x] Support Mutation, Adding/Removing/Insert Children
-- [ ] Create a base template `tns create myapp --template <paht-to-template>` ( thanks @NickIliev :) )
+- [x] Pipe NativeScript typings and JSDoc to appear on React components and JSX / TSX components.
+- [ ] Create a base template `tns create myapp --template <path-to-template>` ( thanks @NickIliev for requesting this feature :) )
 - [ ] Add webpack config and/or create a create-react-app flavor.
-- [ ] Start adding tests
-- [ ] Implement props.style
+- [x] Implement props.style & RN Stylesheet API.
 - [ ] Implement CSS imports
 - [ ] Make Styled-Components, React-Pose work out of the box
-- [ ] Implement the RN StyleSheet, Animated API ( see react-native-web implementation)
+- [ ] Implement Animated API ( see react-native-web implementation)
 - [ ] Implement the ReactNative components (View, Text, etc) to help people transition to NativeScript
-- [ ] Implement DOM interface so that we would get instant compatibility with React-Router, React-Pose, etc ...
+- [ ] Implement DOM interface to get instant compatibility with Styled-Components, React-Router, React-Pose, etc ...
       ( use https://www.npmjs.com/package/nativescript-dom package )
 - [ ] `feature requests are welcome`
  
