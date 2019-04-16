@@ -7,6 +7,10 @@ Build native application using React and Nativescript.
 ## React + NativeScript = :muscle:
 
 * React declarative, composable API, and speed.
+* React is skill that is available / the learning curve is very smooth
+* There is a ton a very usefull React-packages available
+* React is THE thing anyway 
+
 * Build 100% native cross-platform apps NativeScript, and the ability to implement platform-specific UIs.
 * Share 100% of your code, or use platform-specific APIs, depending on the app you’re building.
 * Use standards-based CSS syntax for styling.
@@ -16,6 +20,7 @@ Build native application using React and Nativescript.
 * Reuse the QA tools for accessibility automation to write tests.
 * Use the latest native platform features to create an amazing native user experience.
 * Code in any IDE of your choice to implement your applications’ code using the NativeScript framework's CLI.
+* Take a look at the NativeScript CTO guide ( the advantages are better explained ): https://www.nativescript.org/ctos-guide 
 
 ## Roadmap / Contributing :nerd_face:
 
