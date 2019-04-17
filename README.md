@@ -2,25 +2,45 @@
 
 # :package: :sparkles: NativeScript-React
 
-Build native application using React and Nativescript.
+Build native application using React and Nativescript. 
+
+## How to Install
+
+```sh
+npm i --save nativescript-react
+# or
+yard add nativescript-react
+```
+
+## How to use ?
+
+```js
+import React from 'react';
+import AppRegistery from 'nativescript-react';
+import App from './path/to/app';
+
+AppRegistery.runApplication(<App />);
+```
 
 ## React + NativeScript = :muscle:
 
-* React declarative, composable API, and speed.
-* React is skill that is available / the learning curve is very smooth
-* There is a ton a very usefull React-packages available
-* React is THE thing anyway 
+✅ React declarative, composable API, and speed.<br/>
+✅ React is skill that is available / the learning curve is very smooth<br/>
+✅ There is a ton a very usefull React-packages available<br/>
+✅ React is THE thing anyway <br/>
 
-* Build 100% native cross-platform apps NativeScript, and the ability to implement platform-specific UIs.
-* Share 100% of your code, or use platform-specific APIs, depending on the app you’re building.
-* Use standards-based CSS syntax for styling.
-* Use rich data binding and existing UI patterns to easily build complex user interfaces.
-* Reuse any native library available in Objective-C or Java.
-* Reuse any JavaScript library that is not browser-dependent.
-* Reuse the QA tools for accessibility automation to write tests.
-* Use the latest native platform features to create an amazing native user experience.
-* Code in any IDE of your choice to implement your applications’ code using the NativeScript framework's CLI.
-* Take a look at the NativeScript CTO guide ( the advantages are better explained ): https://www.nativescript.org/ctos-guide 
+✅ Build 100% native cross-platform apps NativeScript, and the ability to implement platform-specific UIs.<br/>
+✅ Share 100% of your code, or use platform-specific APIs, depending on the app you’re building.<br/>
+✅ Use standards-based CSS syntax for styling.<br/>
+✅ Use rich data binding and existing UI patterns to easily build complex user interfaces.<br/>
+✅ Reuse any native library available in Objective-C or Java.<br/>
+✅ Get day-0 access to the OS updates, thanks to the native javascript bindings.<br/>
+✅ Reuse any JavaScript library that is not browser-dependent.<br/>
+✅ Reuse the QA tools for accessibility automation to write tests.<br/>
+✅ Use the latest native platform features to create an amazing native user experience.<br/>
+✅ Code in any IDE of your choice to implement your applications’ code using the NativeScript framework's CLI.<br/>
+
+NB: Take a look at the NativeScript CTO guide ( the advantages are better explained ): https://www.nativescript.org/ctos-guide 
 
 ## Roadmap / Contributing :nerd_face:
 
