@@ -19,9 +19,16 @@ describe('createPropUpdater', () => {
   })
 
   it('should return which props to remove', () => {
-    const { propsToCreate, propsToRemove, propsToUpdate } = getUpdateInstruction({key1: 0, key2: 1}, {key2: 0})
-    expect(propsToRemove).to.have.lengthOf(1);
-    expect(propsToRemove[0]).to.equal('key1');
+    {
+      const { propsToCreate, propsToRemove, propsToUpdate } = getUpdateInstruction({key1: 0, key2: 1}, {key2: 0})
+      expect(propsToRemove).to.have.lengthOf(1);
+      expect(propsToRemove[0]).to.equal('key1');
+    }
+    {
+      const { propsToCreate, propsToRemove, propsToUpdate } = getUpdateInstruction({key1: 0}, null)
+      expect(propsToRemove).to.have.lengthOf(1);
+      expect(propsToRemove[0]).to.equal('key1');
+    }
   })
 
   it('should return which props to update', () => {
@@ -92,7 +99,7 @@ describe('createPropUpdater', () => {
     }
   })
 
-  it.only('should give intructions for each prop keys to update', () => {
+  it('should give intructions for each prop keys to update', () => {
     const oldProp = {
       key1: 'test',
       key2: 1,

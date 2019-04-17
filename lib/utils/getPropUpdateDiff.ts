@@ -5,22 +5,25 @@ export default function getUpdateInstructions(oldProps: object, newProps: object
       propsToUpdate: [],
   }
 
-  const newPropKeys = Object.keys(newProps);
-  const oldPropKeys = Object.keys(oldProps);
+  const prevProps = oldProps || {};
+  const nextProps = newProps || {};
 
-  const isOnlyNewProps = !oldProps || oldPropKeys.length === 0;
+  const oldPropKeys = Object.keys(prevProps);
+  const newPropKeys = Object.keys(nextProps);
+
+  const isOnlyNewProps = !prevProps || oldPropKeys.length === 0;
   if(isOnlyNewProps){
       updateInstructions.propsToCreate = newPropKeys;
       return updateInstructions;
   }
 
   newPropKeys.forEach((newPropKey) => {
-      const propDidNotChange = newProps[newPropKey] === oldProps[newPropKey]
+      const propDidNotChange = nextProps[newPropKey] === prevProps[newPropKey]
       if (propDidNotChange) { 
           return;
       }
 
-      const isNewProp = !oldProps.hasOwnProperty(newPropKey);
+      const isNewProp = !prevProps.hasOwnProperty(newPropKey);
       if (isNewProp) {
           updateInstructions.propsToCreate.push(newPropKey);
           return;
@@ -31,7 +34,7 @@ export default function getUpdateInstructions(oldProps: object, newProps: object
   })
   
   oldPropKeys.forEach((oldPropKey) => {
-      const isNewProp = !newProps.hasOwnProperty(oldPropKey);
+      const isNewProp = !nextProps.hasOwnProperty(oldPropKey);
       if (isNewProp) {
           updateInstructions.propsToRemove.push(oldPropKey);
       }
