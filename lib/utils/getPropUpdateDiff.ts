@@ -23,22 +23,19 @@ export default function getUpdateInstructions(oldProps: object, newProps: object
       const isNewProp = !oldProps.hasOwnProperty(newPropKey);
       if (isNewProp) {
           updateInstructions.propsToCreate.push(newPropKey);
+          return;
       }
       
       // new Prop has to be updated;
-      updateInstructions.propsToUpdate.push(newProps);
+      updateInstructions.propsToUpdate.push(newPropKey);
   })
-
-  // because all keys have already been checked
-  const skipDetectPropToDelete = oldPropKeys.length === newPropKeys.length;
-  if(skipDetectPropToDelete){
-      oldPropKeys.forEach((oldPropKey) => {
-          const isNewProp = !newProps.hasOwnProperty(oldPropKey);
-          if (isNewProp) {
-              updateInstructions.propsToRemove.push(oldPropKey);
-          }
-      })
-  }
+  
+  oldPropKeys.forEach((oldPropKey) => {
+      const isNewProp = !newProps.hasOwnProperty(oldPropKey);
+      if (isNewProp) {
+          updateInstructions.propsToRemove.push(oldPropKey);
+      }
+  })
 
   return updateInstructions;
 }
