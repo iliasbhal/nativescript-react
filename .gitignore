@@ -22,7 +22,10 @@ yarn-error.log*
 .project
 tmp/
 typings/
+
+# Code Coverage
 coverage/
+.coveralls.yml
 
 # Visual Studio Code
 .vscode/
