@@ -38,7 +38,6 @@ export const Slider = createNSReactElementFactory<NSElements.Slider>('Slider');
 export const StackLayout = createNSReactElementFactory<NSElements.StackLayout>('StackLayout');
 export const Switch = createNSReactElementFactory<NSElements.Switch>('Switch');
 export const TabView = createNSReactElementFactory<NSElements.TabView>('TabView');
-export const TextBase = createNSReactElementFactory<NSElements.TextBase>('TextBase');
 export const TextField = createNSReactElementFactory<NSElements.TextField>('TextField');
 export const TextView = createNSReactElementFactory<NSElements.TextView>('TextView');
 export const TimePicker = createNSReactElementFactory<NSElements.TimePicker>('TimePicker');

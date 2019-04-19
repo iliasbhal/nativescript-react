@@ -1,9 +1,11 @@
 import { StyleSheetObject } from './StyleSheet.d';
 
+// TODO: add ability to use css string as style prop.
+
 export default class StyleSheet {
   static styleMap = new Map();
 
-  static create(styleSheetObject: StyleSheetObject){
+  static create(styleSheetObject: StyleSheetObject = {}) : any {
     return Object.keys(styleSheetObject)
       .reduce((styleRefObject, styleIdentifier: string) => {
         const styleId = StyleSheet.styleMap.size;
@@ -26,7 +28,7 @@ export default class StyleSheet {
   static hairlineWidth = 1;
 
   // recursive function that normalize the style Prop
-  static nomalizeStyleProp(styleProp: any){
+  static nomalizeStyleProp(styleProp: any = {}){
     if (Array.isArray(styleProp)) {
       return styleProp.reduce(( styleObject, currentStyle)=>{
         return Object.assign(styleObject, StyleSheet.nomalizeStyleProp(currentStyle));

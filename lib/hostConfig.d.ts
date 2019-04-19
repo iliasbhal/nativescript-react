@@ -6,8 +6,6 @@ import { LayoutBase } from 'tns-core-modules/ui/layouts/layout-base';
 import * as NSElements from './nativescript-registery';
 import StyleSheet from './modules/StyleSheet/StyleSheet';
 
-import getUpdateInstructions from './utils/getUpdateInstructions';
-
 type Type = keyof typeof NSElements;
 type Props = Record<string, any>;
 type Container = LayoutBase; 

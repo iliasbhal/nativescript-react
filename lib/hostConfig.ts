@@ -2,17 +2,13 @@
 // <reference path="./node_modules/tns-platform-declarations/android.d.ts" />
 
 // Documentation from : https://blog.atulr.com/react-custom-renderer-2/
-
-import { HostConfig, OpaqueHandle } from 'react-reconciler';
-
-import { View } from 'tns-core-modules/ui/core/view/view';
 import { LayoutBase } from 'tns-core-modules/ui/layouts/layout-base.d';
 
 import * as NSElements from './nativescript-registery';
-import getUpdateInstructions from './utils/getUpdateInstructions';
-import createPropUpdater, { PROP_LIFECYCLE } from './utils/createPropUpdater';
 
 import { CustomHostConfig } from './hostConfig.d';
+
+import updateInstance from './lib/updateInstance';
 
 export const hostConfig: CustomHostConfig = {
     getPublicInstance(instance) { return instance; },
@@ -81,15 +77,7 @@ export const hostConfig: CustomHostConfig = {
     },
 
     commitUpdate(instance, updatePayload, type, oldProps, newProps, internalInstanceHandle): void {
-        const propUpdateInstructions = getUpdateInstructions(oldProps, newProps);
-
-        const onCreateProps = createPropUpdater(PROP_LIFECYCLE.ON_CREATE, instance, updatePayload, type, oldProps, newProps, internalInstanceHandle);
-        const onUpdateProps = createPropUpdater(PROP_LIFECYCLE.ON_UPDATE, instance, updatePayload, type, oldProps, newProps, internalInstanceHandle);
-        const onDeleteProps = createPropUpdater(PROP_LIFECYCLE.ON_REMOVE, instance, updatePayload, type, oldProps, newProps, internalInstanceHandle);
-
-        propUpdateInstructions.propsToCreate.forEach(onCreateProps);
-        propUpdateInstructions.propsToUpdate.forEach(onUpdateProps);
-        propUpdateInstructions.propsToRemove.forEach(onDeleteProps);
+        updateInstance(instance, updatePayload, type, oldProps, newProps, internalInstanceHandle);
     },
 
     insertBefore(parentInstance, child, beforeChild): void { hostConfig.appendChildToParent(parentInstance, child, { beforeChild }) },

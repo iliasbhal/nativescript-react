@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 const { expect } = chai;
 
-import getUpdateInstruction from '../getPropUpdateDiff';
+import getUpdateInstruction from '../lib/getPropUpdateDiff';
 describe('createPropUpdater', () => {
 
   it('should return empty arrays if nothing is different', () => {
@@ -13,9 +13,16 @@ describe('createPropUpdater', () => {
   })
 
   it('should return which props to create', () => {
-    const { propsToCreate, propsToRemove, propsToUpdate } = getUpdateInstruction({}, {key1: 0})
-    expect(propsToCreate).to.have.lengthOf(1);
-    expect(propsToCreate[0]).to.equal('key1');
+    {
+      const { propsToCreate, propsToRemove, propsToUpdate } = getUpdateInstruction({}, {key1: 0})
+      expect(propsToCreate).to.have.lengthOf(1);
+      expect(propsToCreate[0]).to.equal('key1');
+    }
+    {
+      const { propsToCreate, propsToRemove, propsToUpdate } = getUpdateInstruction(null, {key1: 0})
+      expect(propsToCreate).to.have.lengthOf(1);
+      expect(propsToCreate[0]).to.equal('key1');
+    }
   })
 
   it('should return which props to remove', () => {

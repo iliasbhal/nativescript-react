@@ -11,7 +11,7 @@ export default function getUpdateInstructions(oldProps: object, newProps: object
   const oldPropKeys = Object.keys(prevProps);
   const newPropKeys = Object.keys(nextProps);
 
-  const isOnlyNewProps = !prevProps || oldPropKeys.length === 0;
+  const isOnlyNewProps = oldPropKeys.length === 0;
   if(isOnlyNewProps){
       updateInstructions.propsToCreate = newPropKeys;
       return updateInstructions;

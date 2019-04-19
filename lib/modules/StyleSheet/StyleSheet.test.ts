@@ -52,6 +52,10 @@ describe('StyleSheet', () => {
     const stylesheet = StyleSheet.create(styles)
     const stylesheet2 = StyleSheet.create(styles2)
 
+    // @ts-ignore
+    const noStyles = StyleSheet.create();
+    expect(noStyles).to.deep.equal({});
+
     Object.keys(stylesheet).forEach((styleName) => {
       expect(StyleSheet.get(stylesheet[styleName])).to.equal(styles[styleName])
     })
@@ -76,6 +80,10 @@ describe('StyleSheet', () => {
       expect(StyleSheet.get(style[styleName])).to.equal(undefined)
     })
 
+  })
+
+  it('should give the hairlineWidth', ()=>{
+    expect(StyleSheet.hairlineWidth).to.equal(1);
   })
 
   describe('flatten / nomalizeStyleProp', () => {
@@ -116,12 +124,27 @@ describe('StyleSheet', () => {
       });
     });
   
-    it('should not fail on falsy values, should return empty object', () => {
-      expect(StyleSheet.flatten([null, false, undefined])).to.deep.equal({});
+    it('should not fail on falsy/ empty values, should return empty object', () => {
       // @ts-ignore
       expect(StyleSheet.flatten()).to.deep.equal({});
+      expect(StyleSheet.flatten(false)).to.deep.equal({});
+      expect(StyleSheet.flatten([null, false, undefined])).to.deep.equal({});
+      expect(StyleSheet.flatten([])).to.deep.equal({});
     });
   
+    it('should retrieve and normalize mapped stylesheets', () => {
+      const styles = {
+        wrapper: { width: 3 },
+        inner: { width: 2},
+        card: { width: 1}
+      }
+      
+      const stylesheet = StyleSheet.create(styles)
+      const style = StyleSheet.flatten(stylesheet.wrapper);
+      
+      expect(style).to.deep.equal(styles.wrapper);
+    })
+
     it('should recursively flatten arrays', () => {
       const style = StyleSheet.flatten([null, [], [{ order: 2 }, [{ opacity: 1 }]], { order: 3 }]);
       expect(style).to.deep.equal({
