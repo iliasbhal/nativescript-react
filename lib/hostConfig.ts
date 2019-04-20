@@ -34,7 +34,6 @@ export const hostConfig: CustomHostConfig = {
     // This method is mainly used in react-dom for implementing autofocus. This method exists in react-dom only and not in react-native.
     commitMount( instance, type, newProps, internalInstanceHandle) {},
 
-
     // This function gets executed after the inmemory tree has been attached to the root dom element. Here we can do any post attach operations that needs to be done.
     // For example: react-dom re-enabled events which were temporarily disabled in prepareForCommit and refocuses elements, etc.
     resetAfterCommit(rootContainerInstance) {},
@@ -80,14 +79,14 @@ export const hostConfig: CustomHostConfig = {
         updateInstance(instance, updatePayload, type, oldProps, newProps, internalInstanceHandle);
     },
 
-    insertBefore(parentInstance, child, beforeChild): void { hostConfig.appendChildToParent(parentInstance, child, { beforeChild }) },
-    insertInContainerBefore(container, child, beforeChild): void {  hostConfig.appendChildToParent(container, child, { beforeChild }) },
-    appendChildToContainer(container, child): void { hostConfig.appendChildToParent(container, child); },
-    appendInitialChild(parentInstance, child) { hostConfig.appendChildToParent(parentInstance, child); },
-    appendChild(parentInstance, child): void { hostConfig.appendChildToParent(parentInstance, child); },
+    insertBefore(parentInstance, child, beforeChild): void { hostConfig.addChildToParent(parentInstance, child, { beforeChild }) },
+    insertInContainerBefore(container, child, beforeChild): void {  hostConfig.addChildToParent(container, child, { beforeChild }) },
+    appendChildToContainer(container, child): void { hostConfig.addChildToParent(container, child); },
+    appendInitialChild(parentInstance, child) { hostConfig.addChildToParent(parentInstance, child); },
+    appendChild(parentInstance, child): void { hostConfig.addChildToParent(parentInstance, child); },
 
     // Custom function 
-    appendChildToParent(parentInstance, child, options?: { beforeChild }){
+    addChildToParent(parentInstance, child, options?: { beforeChild }){
         if(parentInstance instanceof NSElements.ContentView){
             // These elements were originally designed to hold one element only
             // TODO: for elements that can only take one child, add a FlexView or something in between so that the "children" api will always be consistent
@@ -95,16 +94,12 @@ export const hostConfig: CustomHostConfig = {
             parentInstance.content = (child);
              
         } else if ( parentInstance instanceof LayoutBase ) {
-            
             if( options && options.beforeChild ){
                 const childIndex = parentInstance.getChildIndex(options.beforeChild);
                 parentInstance.insertChild(child, childIndex)
             } else {
                 parentInstance.addChild(child);
             }
-
-        } else {
-          parentInstance._addView(child);
         }
     },
 
@@ -114,8 +109,6 @@ export const hostConfig: CustomHostConfig = {
              parentInstance.content = null;
         } else if ( parentInstance instanceof LayoutBase ) {
             parentInstance.removeChild(child);
-        } else {
-          parentInstance._removeView(child);
         }
     },
 }

@@ -20,5 +20,5 @@ type TimeoutHandle = number;
 type NoTimeout = any;
 
 export interface CustomHostConfig extends HostConfig<Type, Props, Container, Instance, TextInstance, HydratableInstance, PublicInstance, HostContext, UpdatePayload, ChildSet, TimeoutHandle, NoTimeout> {
-    appendChildToParent(parentInstance: Instance, child: Instance, options?: { beforeChild: Instance }) : void
+    addChildToParent(parentInstance: Instance, child: Instance, options?: { beforeChild: Instance }) : void
 }
