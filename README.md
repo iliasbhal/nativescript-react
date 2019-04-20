@@ -1,7 +1,7 @@
 ![NativeScript-React](https://raw.githubusercontent.com/iliasbhal/nativescript-react/master/head-img.png)
 
 [![npm version](https://badge.fury.io/js/nativescript-react.svg)](https://badge.fury.io/js/nativescript-react)
-[![Coverage Status](https://coveralls.io/repos/github/iliasbhal/nativescript-react/badge.svg?branch=master)](https://coveralls.io/github/iliasbhal/nativescript-react?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/iliasbhal/nativescript-react/badge.svg)](https://coveralls.io/github/iliasbhal/nativescript-react)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/iliasbhal/nativescript-react/blob/master/LICENSE)
 
 # :package: :sparkles: NativeScript-React
